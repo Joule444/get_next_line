@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 15:10:54 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/05/24 15:22:34 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/05/26 17:31:28 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,41 @@ size_t	ft_strlen(const char *str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+size_t	ft_strcpy(char *dest, const char *src)
+{
+	size_t	i;
+
+	i = 0;
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (ft_strlen(src));
+}
+
+size_t	ft_strlcat(char *dest, const char *src)
+{
+	size_t	i;
+	size_t	j;
+	size_t	d;
+
+	i = 0;
+	j = 0;
+	d = ft_strlen(dest);
+	while (dest[i])
+		i++;
+	while (src[j])
+	{
+		dest[i] = src[j];
+		j++;
+		i++;
+	}
+	dest[i] = '\0';
+	return (d + ft_strlen(src));
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)

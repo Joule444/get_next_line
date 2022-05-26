@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 11:51:46 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/05/24 15:21:59 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/05/26 16:47:33 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <stdlib.h>
 
 char	*ft_strjoin(char const *s1, char const *s2);
-char    *get_next_line(int fd);
+char	*get_next_line(int fd);
+size_t	ft_strcpy(char *dest, const char *src);
+size_t	ft_strlen(const char *str);
 
 #endif
