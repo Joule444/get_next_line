@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 11:37:04 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/05/26 17:31:29 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/05/30 16:55:48 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,32 +26,66 @@ int	check_endline(char *buffer)
 	return (0);
 }
 
+#include <stdio.h>
+char	*keep_rest(char *buffer)
+{
+	int		i;
+	char	*rest;
+
+	i = 0;
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	rest = malloc(sizeof(char) * ft_strlen(buffer + i) + 1);
+	ft_strcpy(rest, buffer + i + 1);
+	return (rest);
+}
+
+char	*cut_end(char *buffer)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	tmp = malloc(sizeof(char) * ft_strlen(buffer) + 1);
+	ft_strcpy(tmp, buffer);
+	while (tmp[i] && tmp[i] != '\n')
+		i++;
+	tmp[i] = '\0';
+	buffer = malloc(sizeof(char) * i + 1);
+	ft_strcpy(buffer, tmp);
+	free(tmp);
+	return (buffer);
+}
+
 char	*get_next_line(int fd)
 {
 	char			*buffer;
 	char			*buffer_tmp;
 	static char		*rest;
-	ssize_t			size;
-	int				i;
+	static int		end;
+	int				x;
 
+	if (end != 1)
+		end = 0;
+	else
+		return (NULL);
 	if (!rest)
 		rest = "";
 	buffer = malloc(sizeof(char) * ft_strlen(rest) + 1);
-	size = 0;
 	ft_strcpy(buffer, rest);
 	buffer_tmp = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	i = 0;
 	while (!check_endline(buffer))
 	{
-		size += read(fd, buffer_tmp, BUFFER_SIZE);
+		x = read(fd, buffer_tmp, BUFFER_SIZE);
+		if (x <= 0)
+		{
+			end = 1;
+			break ;
+		}
 		buffer = ft_strjoin(buffer, buffer_tmp);
 	}
-	buffer[size] = '\0';
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-	rest = malloc(sizeof(char) * ft_strlen(buffer + i) + 1);
-	ft_strcpy(rest, buffer + i + 1);
-	buffer[i] = '\0';
+	rest = keep_rest(buffer);
+	buffer = cut_end(buffer);
 	return (buffer);
 }
 
@@ -63,15 +97,15 @@ char	*get_next_line(int fd)
 int main()
 {
     int fd;
-
+	char	*s = "";
     fd = open("bounce", O_RDONLY);
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-	printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-	printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
-    printf("%s\n", get_next_line(fd));
+	//fd = 1 ;
+	s = get_next_line(fd);
+	printf("%s\n",s);
+	while (s)
+	{
+		s = get_next_line(fd);
+    	printf("%s", s);
+		printf("\n");
+	}
 }
