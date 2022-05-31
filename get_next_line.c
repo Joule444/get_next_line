@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 11:37:04 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/05/30 16:55:48 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/05/31 15:07:35 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*keep_rest(char *buffer)
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	rest = malloc(sizeof(char) * ft_strlen(buffer + i) + 1);
+	rest = malloc(sizeof(char) * ft_strlen(buffer + i + 1) + 1);
 	ft_strcpy(rest, buffer + i + 1);
 	return (rest);
 }
@@ -74,6 +74,7 @@ char	*get_next_line(int fd)
 	buffer = malloc(sizeof(char) * ft_strlen(rest) + 1);
 	ft_strcpy(buffer, rest);
 	buffer_tmp = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	buffer_tmp[0] = 0;
 	while (!check_endline(buffer))
 	{
 		x = read(fd, buffer_tmp, BUFFER_SIZE);
@@ -82,6 +83,7 @@ char	*get_next_line(int fd)
 			end = 1;
 			break ;
 		}
+		buffer_tmp[x] = '\0';
 		buffer = ft_strjoin(buffer, buffer_tmp);
 	}
 	rest = keep_rest(buffer);
