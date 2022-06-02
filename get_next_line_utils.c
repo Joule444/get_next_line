@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 15:10:54 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/05/31 15:08:08 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/06/02 13:03:28 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ size_t	ft_strlen(const char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while (str[i])
 		i++;
 	return (i);
@@ -57,7 +59,7 @@ size_t	ft_strlcat(char *dest, const char *src)
 	return (d + ft_strlen(src));
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	i;
 	size_t	j;
@@ -82,5 +84,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		j++;
 	}
 	dest[j] = '\0';
+	free(s1);
 	return (dest);
 }
