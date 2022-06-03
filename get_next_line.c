@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 11:37:04 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/06/02 15:40:05 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/06/03 15:16:08 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*keep_rest(char *buffer)
 	i = 0;
 	while (buffer[i] != '\0' && buffer[i] != '\n')
 		i++;
-	rest = malloc(sizeof(char) * ft_strlen(buffer + i + 1) + 1);
+	rest = malloc(sizeof(char) * (ft_strlen(buffer + i + 1) + 1));
 	ft_strcpy(rest, buffer + i + 1);
 	return (rest);
 }
@@ -83,7 +83,6 @@ char	*get_next_line(int fd)
 		if (x <= 0)
 		{
 			end = 1;
-			free(buffer);
 			free(buffer_tmp);
 			break ;
 		}
@@ -105,16 +104,17 @@ int main()
 {
     int fd;
 	char	*s = "";
-    fd = open("bounce", O_RDONLY);
+    fd = open("allo", O_RDONLY);
 	//fd = 1 ;
 	s = get_next_line(fd);
 	printf("%s\n",s);
-	while (s)
-	{
-		free(s);
-		s = get_next_line(fd);
-    	printf("%s", s);
-		printf("\n");
-	}
 	free(s);
+	// while (s)
+	// {
+	// 	free(s);
+	// 	s = get_next_line(fd);
+    // 	printf("%s", s);
+	// 	printf("\n");
+	// }
+	// free(s);
 }
