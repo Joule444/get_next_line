@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 15:10:54 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/06/02 13:03:28 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/06/07 14:59:55 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,5 @@ char	*ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	dest[j] = '\0';
-	free(s1);
-	return (dest);
+	return (free(s1), dest);
 }
