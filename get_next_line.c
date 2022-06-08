@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 12:13:50 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/06/08 15:34:58 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/06/08 16:56:26 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ char	*get_read(char *stock, int fd)
 	while (bytes > 0 && !check_endline(stock))
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
+		if (bytes < 0)
+			return (free(buffer), NULL);
 		buffer[bytes] = '\0';
 		stock = ft_strjoin(stock, buffer);
 	}
@@ -81,6 +83,8 @@ char	*get_rest(char *stock)
 	if (stock[i] == '\0')
 		return (free(stock), NULL);
 	rest = malloc(sizeof(char) * (ft_strlen(stock + i + 1) + 1));
+	if (!rest)
+		return (free(stock), NULL);
 	ft_strcpy(rest, stock + i + 1);
 	return (free(stock), rest);
 }
@@ -90,6 +94,8 @@ char	*get_next_line(int fd)
 	static char	*stock;
 	char		*line;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	line = 0;
 	if (!stock)
 	{
@@ -102,28 +108,30 @@ char	*get_next_line(int fd)
 	if (!stock || stock[0] == '\0')
 		return (free(stock), NULL);
 	line = get_line(stock, line);
+	if (line == NULL)
+		return (free(stock), NULL);
 	stock = get_rest(stock);
 	return (line);
 }
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
+// #include <sys/types.h>
+// #include <sys/stat.h>
+// #include <fcntl.h>
+// #include <stdio.h>
 
-int main()
-{
-    int fd;
-	char	*s = "";
-    fd = open("bounce", O_RDONLY);
-	//fd = 1 ;
-	s = get_next_line(fd);
-	printf("%s",s);
-	while (s)
-	{
-		free(s);
-		s = get_next_line(fd);
-    	printf("%s", s);
-	}
-	free(s);
-}
+// int main()
+// {
+//     int fd;
+// 	char	*s = "";
+//     fd = open("bounce", O_RDONLY);
+// 	//fd = 1 ;
+// 	s = get_next_line(fd);
+// 	printf("%s",s);
+// 	while (s)
+// 	{
+// 		free(s);
+// 		s = get_next_line(fd);
+//     	printf("%s", s);
+// 	}
+// 	free(s);
+// }

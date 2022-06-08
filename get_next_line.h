@@ -6,14 +6,14 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 11:51:46 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/06/08 15:36:52 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:38:10 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# gitinclude <unistd.h>
+# include <unistd.h>
 # include <string.h>
 # include <stdlib.h>
 
