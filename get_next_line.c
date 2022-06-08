@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/24 11:37:04 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/06/03 15:16:08 by jthuysba         ###   ########.fr       */
+/*   Created: 2022/06/07 12:13:50 by jthuysba          #+#    #+#             */
+/*   Updated: 2022/06/08 15:34:58 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,73 +26,84 @@ int	check_endline(char *buffer)
 	return (0);
 }
 
-char	*keep_rest(char *buffer)
+char	*get_read(char *stock, int fd)
+{
+	int		bytes;
+	char	*buffer;
+
+	bytes = 1;
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
+	while (bytes > 0 && !check_endline(stock))
+	{
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		buffer[bytes] = '\0';
+		stock = ft_strjoin(stock, buffer);
+	}
+	return (free(buffer), stock);
+}
+
+char	*get_line(char *stock, char *line)
+{
+	int	i;
+
+	i = 0;
+	while (stock[i] != '\n' && stock[i])
+		i++;
+	line = malloc(sizeof(char) * (i + 2));
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (stock[i] != '\n' && stock[i])
+	{
+		line[i] = stock[i];
+		i++;
+	}
+	if (stock[i] == '\n')
+	{
+		line[i] = '\n';
+		line[i + 1] = '\0';
+	}
+	else
+		line[i] = '\0';
+	return (line);
+}
+
+char	*get_rest(char *stock)
 {
 	int		i;
 	char	*rest;
 
 	i = 0;
-	while (buffer[i] != '\0' && buffer[i] != '\n')
+	while (stock[i] != '\n' && stock[i])
 		i++;
-	rest = malloc(sizeof(char) * (ft_strlen(buffer + i + 1) + 1));
-	ft_strcpy(rest, buffer + i + 1);
-	return (rest);
-}
-
-char	*cut_end(char *buffer)
-{
-	int		i;
-	char	*tmp;
-
-	i = 0;
-	tmp = malloc(sizeof(char) * ft_strlen(buffer) + 1);
-	ft_strcpy(tmp, buffer);
-	free (buffer);
-	while (tmp[i] && tmp[i] != '\n')
-		i++;
-	tmp[i] = '\0';
-	buffer = malloc(sizeof(char) * i + 1);
-	ft_strcpy(buffer, tmp);
-	free(tmp);
-	return (buffer);
+	if (stock[i] == '\0')
+		return (free(stock), NULL);
+	rest = malloc(sizeof(char) * (ft_strlen(stock + i + 1) + 1));
+	ft_strcpy(rest, stock + i + 1);
+	return (free(stock), rest);
 }
 
 char	*get_next_line(int fd)
 {
-	char			*buffer;
-	char			*buffer_tmp;
-	static char		*rest;
-	static int		end;
-	int				x;
+	static char	*stock;
+	char		*line;
 
-	if (end != 1)
-		end = 0;
-	else
-		return (NULL);
-	if (!rest)
+	line = 0;
+	if (!stock)
 	{
-		rest = malloc(sizeof(char) * 1);
-		rest[0] = '\0';
+		stock = malloc(sizeof(char));
+		if (!stock)
+			return (NULL);
+		stock[0] = '\0';
 	}
-	buffer = malloc(sizeof(char) * (ft_strlen(rest) + 1));
-	ft_strcpy(buffer, rest);
-	buffer_tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	while (!check_endline(buffer))
-	{
-		x = read(fd, buffer_tmp, BUFFER_SIZE);
-		if (x <= 0)
-		{
-			end = 1;
-			free(buffer_tmp);
-			break ;
-		}
-		buffer_tmp[x] = '\0';
-		buffer = ft_strjoin(buffer, buffer_tmp);
-	}
-	free(rest);
-	rest = keep_rest(buffer);
-	buffer = cut_end(buffer);
-	return (buffer);
+	stock = get_read(stock, fd);
+	if (!stock || stock[0] == '\0')
+		return (free(stock), NULL);
+	line = get_line(stock, line);
+	stock = get_rest(stock);
+	return (line);
 }
 
 #include <sys/types.h>
@@ -104,17 +115,15 @@ int main()
 {
     int fd;
 	char	*s = "";
-    fd = open("allo", O_RDONLY);
+    fd = open("bounce", O_RDONLY);
 	//fd = 1 ;
 	s = get_next_line(fd);
-	printf("%s\n",s);
+	printf("%s",s);
+	while (s)
+	{
+		free(s);
+		s = get_next_line(fd);
+    	printf("%s", s);
+	}
 	free(s);
-	// while (s)
-	// {
-	// 	free(s);
-	// 	s = get_next_line(fd);
-    // 	printf("%s", s);
-	// 	printf("\n");
-	// }
-	// free(s);
 }
