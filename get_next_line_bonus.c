@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 12:13:50 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/06/10 13:00:35 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/06/10 13:00:20 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	check_endline(char *buffer)
 {
@@ -93,25 +93,25 @@ char	*get_rest(char *stock)
 
 char	*get_next_line(int fd)
 {
-	static char	*stock;
+	static char	*stock[FOPEN_MAX];
 	char		*line;
 
 	if (fd < 0 || fd > FOPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = 0;
-	if (!stock)
+	if (!stock[fd])
 	{
-		stock = malloc(sizeof(char));
-		if (!stock)
+		stock[fd] = malloc(sizeof(char));
+		if (!stock[fd])
 			return (NULL);
-		stock[0] = '\0';
+		stock[fd][0] = '\0';
 	}
-	stock = get_read(stock, fd);
-	if (!stock || stock[0] == '\0')
-		return (free(stock), NULL);
-	line = get_line(stock, line);
+	stock[fd] = get_read(stock[fd], fd);
+	if (!stock[fd] || stock[fd][0] == '\0')
+		return (free(stock[fd]), NULL);
+	line = get_line(stock[fd], line);
 	if (line == NULL)
-		return (free(stock), NULL);
-	stock = get_rest(stock);
+		return (free(stock[fd]), NULL);
+	stock[fd] = get_rest(stock[fd]);
 	return (line);
 }
