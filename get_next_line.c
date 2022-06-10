@@ -6,7 +6,7 @@
 /*   By: jthuysba <jthuysba@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 12:13:50 by jthuysba          #+#    #+#             */
-/*   Updated: 2022/06/08 16:56:26 by jthuysba         ###   ########.fr       */
+/*   Updated: 2022/06/10 12:42:59 by jthuysba         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,12 @@ char	*get_read(char *stock, int fd)
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes < 0)
-			return (free(buffer), NULL);
+			return (free(stock), free(buffer), NULL);
 		buffer[bytes] = '\0';
 		stock = ft_strjoin(stock, buffer);
 	}
+	if (stock[0] == '\0')
+		return (free(stock), free (buffer), NULL);
 	return (free(buffer), stock);
 }
 
@@ -94,7 +96,7 @@ char	*get_next_line(int fd)
 	static char	*stock;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd > FOPEN_MAX || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = 0;
 	if (!stock)
@@ -124,14 +126,15 @@ char	*get_next_line(int fd)
 //     int fd;
 // 	char	*s = "";
 //     fd = open("bounce", O_RDONLY);
-// 	//fd = 1 ;
 // 	s = get_next_line(fd);
 // 	printf("%s",s);
-// 	while (s)
-// 	{
-// 		free(s);
-// 		s = get_next_line(fd);
-//     	printf("%s", s);
-// 	}
 // 	free(s);
+// 	//free(s);
+// 	// while (s)
+// 	// {
+// 	// 	free(s);
+// 	// 	s = get_next_line(fd);
+//     // 	printf("%s", s);
+// 	// }
+// 	// free(s);
 // }
